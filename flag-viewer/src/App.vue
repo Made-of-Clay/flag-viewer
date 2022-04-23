@@ -23,7 +23,9 @@
             </div>
         </header>
 
-        <router-view />
+        <main>
+            <router-view />
+        </main>
     </div>
 </template>
 
@@ -32,12 +34,19 @@ import '/node_modules/primeflex/primeflex.css';
 import 'primeicons/primeicons.css';
 import { computed, ref } from '@vue/reactivity';
 import Button from 'primevue/button';
+import { inject, watch } from 'vue';
+import { SERVICE_KEY as colorThemeServiceKey, ColorThemeService } from './services/ColorThemeService';
 
-const isDarkMode = ref(false);
+const colorThemeService = inject<ColorThemeService>(colorThemeServiceKey);
+
+const isDarkMode = ref(colorThemeService?.getTheme() ?? false);
 const themeClass = computed(() => ({
     'theme--dark': isDarkMode.value,
     'theme--light': !isDarkMode.value,
 }));
+watch(isDarkMode, (isDark) => {
+    colorThemeService?.setTheme(isDark);
+});
 </script>
 
 <style lang="scss">
