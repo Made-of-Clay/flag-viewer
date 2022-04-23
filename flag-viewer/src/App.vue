@@ -1,26 +1,29 @@
 <template>
     <div
-        class="app"
+        class="app fullHeight"
         :class="themeClass"
     >
         <header class="app__header">
-            <h1 class="app__heading">
-                Where in the world?
-            </h1>
-            <div class="app__themeToggleWrapper">
-                <!-- TODO fix button styles -->
-                <Button
-                    class="p-button-text"
-                    @click="isDarkMode = !isDarkMode"
-                >
-                    <template v-if="isDarkMode">
-                        <span class="pi pi-sun" /> Light Mode
-                    </template>
-                    <template v-else>
-                        <span class="pi pi-moon" /> Dark Mode
-                    </template>
-                </Button>
-            </div>
+            <content-container class="app__contentContainer">
+                <h1 class="app__heading">
+                    Where in the world?
+                </h1>
+                <span class="flex-1" />
+                <div class="app__themeToggleWrapper">
+                    <!-- TODO fix button styles -->
+                    <Button
+                        class="p-button-text"
+                        @click="isDarkMode = !isDarkMode"
+                    >
+                        <template v-if="isDarkMode">
+                            <span class="pi pi-sun" /> Light Mode
+                        </template>
+                        <template v-else>
+                            <span class="pi pi-moon" /> Dark Mode
+                        </template>
+                    </Button>
+                </div>
+            </content-container>
         </header>
 
         <main>
@@ -34,6 +37,7 @@ import '/node_modules/primeflex/primeflex.css';
 import 'primeicons/primeicons.css';
 import { computed, ref } from '@vue/reactivity';
 import Button from 'primevue/button';
+import ContentContainer from './components/ContentContainer.vue';
 import { inject, watch } from 'vue';
 import { SERVICE_KEY as colorThemeServiceKey, ColorThemeService } from './services/ColorThemeService';
 
@@ -53,13 +57,16 @@ watch(isDarkMode, (isDark) => {
 @import 'primeflex/primeflex.scss';
 
 :root {
+    --border-radius: 5px;
     --darkModeElements: hsl(209, 23%, 22%);
     --darkModeBackground: hsl(207, 26%, 17%);
     --darkModeText: hsl(0, 0%, 100%);
+    --darkModeBoxShadow: 0 3px 3px hsla(0, 0%, 0%, 0.1);
     --lightModeElements: var(--darkModeText);
     --lightModeText: hsl(200, 15%, 8%);
     --lightModeInput: hsl(0, 0%, 52%);
     --lightModeBackground: hsl(0, 0%, 98%);
+    --lightModeBoxShadow: 0 3px 3px #f0f0f0;
 }
 .app {
     font-family: 'Nunito Sans', Avenir, Helvetica, Arial, sans-serif;
@@ -67,7 +74,6 @@ watch(isDarkMode, (isDark) => {
     -moz-osx-font-smoothing: grayscale;
     color: #2c3e50;
     height: 100%;
-    text-align: center;
 
     &.theme--dark {
         background-color: var(--darkModeBackground);
@@ -79,27 +85,33 @@ watch(isDarkMode, (isDark) => {
     }
 }
 .app__header {
-    @include styleclass('py-3 grid grid-nogutter');
+    @include styleclass('py-3');
 
     .theme--dark & {
         background-color: var(--darkModeElements);
-        box-shadow: 0 3px 3px hsla(0, 0%, 0%, 0.1);
+        box-shadow: var(--darkModeBoxShadow);
     }
     .theme--light & {
         background-color: var(--lightModeElements);
         box-shadow: 0 3px 3px #f0f0f0;
+        box-shadow: var(--lightModeBoxShadow);
     }
-    > h1 {
+}
+// .app__themeToggleWrapper {
+// }
+.app__heading {
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin: 0;
+    white-space: nowrap;
+
+    @media (min-width: 500px) {
         font-size: 1.25rem;
         font-weight: 800;
-        margin: 0;
-        white-space: nowrap;
     }
 }
-.app__themeToggleWrapper {
-    @include styleclass('col md:col-5 text-right');
-}
-.app__heading {
-    @include styleclass('col md:col-5 md:col-offset-1 text-left');
+.app__contentContainer {
+    display: flex;
+    align-items: center;
 }
 </style>
